@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Riesgos FinTech Corp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a, #1a1a2e, #16213e);
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Efectos de partículas de fondo */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(0, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        /* Header futurista */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .title {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(0, 255, 255, 0.5)); }
+            100% { filter: drop-shadow(0 0 20px rgba(255, 0, 255, 0.8)); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0a0;
+            margin-bottom: 20px;
+        }
+
+        /* Panel de control */
+        .control-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .controls {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .control-group label {
+            font-size: 0.9rem;
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        .futuristic-button {
+            background: linear-gradient(45deg, #1e3c72, #2a5298);
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(42, 82, 152, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .futuristic-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(42, 82, 152, 0.5);
+        }
+
+        .futuristic-button:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .futuristic-button:hover:before {
+            left: 100%;
+        }
+
+        /* Selector futurista */
+        .futuristic-select {
+            background: rgba(0, 0, 0, 0.3);
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            padding: 8px 15px;
+            color: white;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .futuristic-select:focus {
+            border-color: #ff00ff;
+            box-shadow: 0 0 10px rgba(255, 0, 255, 0.5);
+        }
+
+        /* Dashboard principal */
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .panel:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 255, 255, 0.2);
+        }
+
+        .panel-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: #00ffff;
+            text-align: center;
+            position: relative;
+        }
+
+        .panel-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 2px;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+        }
+
+        /* Mapa de calor */
+        .heatmap-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+        }
+
+        .heatmap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .risk-cell {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid transparent;
+            animation: cellPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes cellPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .risk-cell:hover {
+            transform: scale(1.1) !important;
+            z-index: 10;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+        }
+
+        .risk-cell:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            filter: blur(10px);
+            opacity: 0.7;
+            z-index: -1;
+        }
+
+        .risk-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            z-index: 1;
+        }
+
+        .risk-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            z-index: 1;
+        }
+
+        /* Colores de riesgo */
+        .risk-low {
+            background: linear-gradient(135deg, #4ade80, #22c55e);
+            color: #ffffff;
+        }
+
+        .risk-medium {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #ffffff;
+        }
+
+        .risk-high {
+            background: linear-gradient(135deg, #f97316, #ea580c);
+            color: #ffffff;
+        }
+
+        .risk-critical {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+        }
+
+        /* Estadísticas */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-card {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            border-color: #00ffff;
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #a0a0a0;
+            font-size: 0.9rem;
+        }
+
+        /* Modal de detalles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .detail-section {
+            margin-bottom: 20px;
+        }
+
+        .detail-title {
+            color: #00ffff;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 255, 255, 0.3);
+            padding-bottom: 5px;
+        }
+
+        /* Animaciones de entrada */
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .title {
+                font-size: 1.8rem;
+            }
+        }
+
+        /* Indicador de conexión */
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 15px;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #4ade80;
+            animation: statusBlink 2s ease-in-out infinite;
+        }
+
+        @keyframes statusBlink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="connection-status">
+        <div class="status-dot"></div>
+        <span>Sistema Activo</span>
+    </div>
+
+    <div class="container">
+        <div class="header fade-in">
+            <h1 class="title">FINTECH CORP</h1>
+            <p class="subtitle">Sistema de Gestión de Riesgos Informáticos</p>
+            <p style="font-size: 0.9rem; color: #666;">Monitoreo en tiempo real - Última actualización: <span id="lastUpdate"></span></p>
+        </div>
+
+        <div class="control-panel fade-in">
+            <div class="controls">
+                <div class="control-group">
+                    <label>Departamento:</label>
+                    <select class="futuristic-select" id="departmentFilter">
+                        <option value="all">Todos</option>
+                        <option value="IT">Tecnología</option>
+                        <option value="Finance">Finanzas</option>
+                        <option value="Operations">Operaciones</option>
+                        <option value="Security">Seguridad</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Nivel de Riesgo:</label>
+                    <select class="futuristic-select" id="riskFilter">
+                        <option value="all">Todos</option>
+                        <option value="low">Bajo</option>
+                        <option value="medium">Medio</option>
+                        <option value="high">Alto</option>
+                        <option value="critical">Crítico</option>
+                    </select>
+                </div>
+                <button class="futuristic-button" onclick="refreshData()">Actualizar Datos</button>
+                <button class="futuristic-button" onclick="exportReport()">Exportar Reporte</button>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <div class="panel fade-in">
+                <h2 class="panel-title">Mapa de Calor de Riesgos</h2>
+                <div class="heatmap-container">
+                    <div class="heatmap" id="heatmap"></div>
+                </div>
+            </div>
+
+            <div class="panel fade-in">
+                <h2 class="panel-title">Estadísticas Generales</h2>
+                <div class="stats" id="stats"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de detalles -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        // Datos de riesgos simulados
+        const riskData = [
+            {
+                id: 1,
+                title: "Ciberataques DDoS",
+                department: "IT",
+                riskLevel: "high",
+                probability: 85,
+                impact: 90,
+                description: "Ataques de denegación de servicio distribuido que pueden afectar la disponibilidad de servicios críticos.",
+                mitigation: "Implementar sistemas de protección DDoS, balanceadores de carga y monitoreo continuo.",
+                lastIncident: "2024-08-15",
+                trend: "increasing"
+            },
+            {
+                id: 2,
+                title: "Fraude Electrónico",
+                department: "Finance",
+                riskLevel: "critical",
+                probability: 95,
+                impact: 95,
+                description: "Transacciones fraudulentas que podrían resultar en pérdidas financieras significativas.",
+                mitigation: "Sistemas de detección de fraude con IA, autenticación multifactor y análisis de comportamiento.",
+                lastIncident: "2024-09-10",
+                trend: "stable"
+            },
+            {
+                id: 3,
+                title: "Phishing Avanzado",
+                department: "Security",
+                riskLevel: "high",
+                probability: 80,
+                impact: 75,
+                description: "Ataques de ingeniería social sofisticados dirigidos a empleados clave.",
+                mitigation: "Capacitación continua, filtros de email avanzados y simulacros de phishing.",
+                lastIncident: "2024-09-20",
+                trend: "increasing"
+            },
+            {
+                id: 4,
+                title: "Ransomware",
+                department: "IT",
+                riskLevel: "critical",
+                probability: 75,
+                impact: 100,
+                description: "Malware que cifra datos críticos exigiendo rescate monetario.",
+                mitigation: "Backups automáticos, segmentación de red y sistemas de detección de malware.",
+                lastIncident: "2024-07-30",
+                trend: "decreasing"
+            },
+            {
+                id: 5,
+                title: "Fallas del Sistema Core",
+                department: "Operations",
+                riskLevel: "high",
+                probability: 60,
+                impact: 95,
+                description: "Interrupciones en el sistema bancario principal que afectan todas las operaciones.",
+                mitigation: "Redundancia de sistemas, monitoreo 24/7 y planes de contingencia.",
+                lastIncident: "2024-06-12",
+                trend: "stable"
+            },
+            {
+                id: 6,
+                title: "Violación de Datos Personales",
+                department: "Security",
+                riskLevel: "high",
+                probability: 70,
+                impact: 85,
+                description: "Acceso no autorizado a información personal de clientes.",
+                mitigation: "Cifrado de datos, control de acceso estricto y auditorías regulares.",
+                lastIncident: "2024-08-05",
+                trend: "stable"
+            },
+            {
+                id: 7,
+                title: "Errores de Configuración",
+                department: "IT",
+                riskLevel: "medium",
+                probability: 65,
+                impact: 60,
+                description: "Configuraciones incorrectas que pueden crear vulnerabilidades de seguridad.",
+                mitigation: "Automatización de configuraciones, revisiones por pares y herramientas de scanning.",
+                lastIncident: "2024-09-15",
+                trend: "stable"
+            },
+            {
+                id: 8,
+                title: "Pérdida de Conectividad",
+                department: "Operations",
+                riskLevel: "medium",
+                probability: 45,
+                impact: 70,
+                description: "Interrupciones en la conectividad de red que afectan servicios en línea.",
+                mitigation: "Múltiples proveedores de internet, conexiones redundantes y monitoreo de red.",
+                lastIncident: "2024-08-28",
+                trend: "decreasing"
+            },
+            {
+                id: 9,
+                title: "Amenazas Internas",
+                department: "Security",
+                riskLevel: "medium",
+                probability: 40,
+                impact: 80,
+                description: "Riesgos provenientes de empleados con acceso privilegiado.",
+                mitigation: "Principio de menor privilegio, monitoreo de actividades y background checks.",
+                lastIncident: "2024-05-20",
+                trend: "stable"
+            },
+            {
+                id: 10,
+                title: "Obsolescencia Tecnológica",
+                department: "IT",
+                riskLevel: "low",
+                probability: 30,
+                impact: 50,
+                description: "Sistemas legacy que ya no reciben soporte y presentan vulnerabilidades.",
+                mitigation: "Plan de modernización tecnológica y actualizaciones programadas.",
+                lastIncident: "2024-04-10",
+                trend: "decreasing"
+            }
+        ];
+
+        // Función para obtener color basado en el nivel de riesgo
+        function getRiskColor(riskLevel) {
+            switch(riskLevel) {
+                case 'low': return 'risk-low';
+                case 'medium': return 'risk-medium';
+                case 'high': return 'risk-high';
+                case 'critical': return 'risk-critical';
+                default: return 'risk-low';
+            }
+        }
+
+        // Función para calcular el valor de riesgo
+        function calculateRiskValue(probability, impact) {
+            return Math.round((probability * impact) / 100);
+        }
+
+        // Función para renderizar el mapa de calor
+        function renderHeatmap(data = riskData) {
+            const heatmap = document.getElementById('heatmap');
+            heatmap.innerHTML = '';
+
+            data.forEach(risk => {
+                const cell = document.createElement('div');
+                cell.className = `risk-cell ${getRiskColor(risk.riskLevel)}`;
+                cell.onclick = () => showRiskDetails(risk);
+                
+                const riskValue = calculateRiskValue(risk.probability, risk.impact);
+                
+                cell.innerHTML = `
+                    <div class="risk-title">${risk.title}</div>
+                    <div class="risk-value">${riskValue}</div>
+                `;
+
+                // Animación de entrada escalonada
+                setTimeout(() => {
+                    cell.style.animation = 'fadeIn 0.5s ease-in';
+                }, data.indexOf(risk) * 100);
+
+                heatmap.appendChild(cell);
+            });
+        }
+
+        // Función para renderizar estadísticas
+        function renderStats(data = riskData) {
+            const stats = document.getElementById('stats');
+            
+            const criticalCount = data.filter(r => r.riskLevel === 'critical').length;
+            const highCount = data.filter(r => r.riskLevel === 'high').length;
+            const totalRisks = data.length;
+            const avgRisk = Math.round(data.reduce((sum, r) => sum + calculateRiskValue(r.probability, r.impact), 0) / totalRisks);
+
+            stats.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #ef4444;">${criticalCount}</div>
+                    <div class="stat-label">Riesgos Críticos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #f97316;">${highCount}</div>
+                    <div class="stat-label">Riesgos Altos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #00ffff;">${totalRisks}</div>
+                    <div class="stat-label">Total de Riesgos</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" style="color: #fbbf24;">${avgRisk}</div>
+                    <div class="stat-label">Riesgo Promedio</div>
+                </div>
+            `;
+        }
+
+        // Función para mostrar detalles del riesgo
+        function showRiskDetails(risk) {
+            const modal = document.getElementById('modal');
+            const modalContent = document.getElementById('modalContent');
+            
+            const riskValue = calculateRiskValue(risk.probability, risk.impact);
+            const trendIcon = risk.trend === 'increasing' ? '📈' : risk.trend === 'decreasing' ? '📉' : '➡️';
+            
+            modalContent.innerHTML = `
+                <h2 style="color: #00ffff; margin-bottom: 20px;">${risk.title}</h2>
+                
+                <div class="detail-section">
+                    <h3 class="detail-title">Información General</h3>
+                    <p><strong>Departamento:</strong> ${risk.department}</p>
+                    <p><strong>Nivel de Riesgo:</strong> <span style="color: ${getRiskLevelColor(risk.riskLevel)}">${risk.riskLevel.toUpperCase()}</span></p>
+                    <p><strong>Valor de Riesgo:</strong> ${riskValue}/100</p>
+                    <p><strong>Tendencia:</strong> ${trendIcon} ${risk.trend}</p>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="detail-title">Evaluación de Riesgo</h3>
+                    <p><strong>Probabilidad:</strong> ${risk.probability}%</p>
+                    <p><strong>Impacto:</strong> ${risk.impact}%</p>
+                    <p><strong>Último Incidente:</strong> ${risk.lastIncident}</p>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="detail-title">Descripción</h3>
+                    <p>${risk.description}</p>
+                </div>
+
+                <div class="detail-section">
+                    <h3 class="detail-title">Medidas de Mitigación</h3>
+                    <p>${risk.mitigation}</p>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        // Función auxiliar para obtener color del nivel de riesgo
+        function getRiskLevelColor(level) {
+            switch(level) {
+                case 'low': return '#4ade80';
+                case 'medium': return '#fbbf24';
+                case 'high': return '#f97316';
+                case 'critical': return '#ef4444';
+                default: return '#ffffff';
+            }
+        }
+
+        // Función para cerrar modal
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Función para filtrar datos
+        function applyFilters() {
+            const departmentFilter = document.getElementById('departmentFilter').value;
+            const riskFilter = document.getElementById('riskFilter').value;
+            
+            let filteredData = riskData;
+            
+            if (departmentFilter !== 'all') {
+                filteredData = filteredData.filter(r => r.department === departmentFilter);
+            }
+            
+            if (riskFilter !== 'all') {
+                filteredData = filteredData.filter(r => r.riskLevel === riskFilter);
+            }
+            
+            renderHeatmap(filteredData);
+            renderStats(filteredData);
+        }
+
+        // Función para actualizar datos
+        function refreshData() {
+            // Simular actualización de datos con animación
+            const button = event.target;
+            button.textContent = 'Actualizando...';
+            button.disabled = true;
+            
+            // Simular cambios aleatorios en los datos
+            riskData.forEach(risk => {
+                risk.probability = Math.max(10, Math.min(100, risk.probability + (Math.random() - 0.5) * 10));
+                risk.impact = Math.max(10, Math.min(100, risk.impact + (Math.random() - 0.5) * 5));
+            });
+            
+            setTimeout(() => {
+                applyFilters();
+                updateTimestamp();
+                button.textContent = 'Actualizar Datos';
+                button.disabled = false;
+            }, 2000);
+        }
+
+        // Función para exportar reporte
+        function exportReport() {
+            const reportData = {
+                timestamp: new Date().toISOString(),
+                totalRisks: riskData.length,
+                criticalRisks: riskData.filter(r => r.riskLevel === 'critical').length,
+                risks: riskData
+            };
+            
+            const dataStr = JSON.stringify(reportData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `risk-report-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+        }
+
+        // Función para actualizar timestamp
+        function updateTimestamp() {
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString('es-ES');
+        }
+
+        // Función para crear partículas de fondo
+        function createParticles() {
+            const particles = document.getElementById('particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.width = Math.random() * 4 + 2 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particles.appendChild(particle);
+            }
+        }
+
+        // Event listeners
+        document.getElementById('departmentFilter').addEventListener('change', applyFilters);
+        document.getElementById('riskFilter').addEventListener('change', applyFilters);
+        
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+
+        // Actualización automática cada 30 segundos
+        setInterval(() => {
+            // Simular cambios menores en los datos
+            riskData.forEach(risk => {
+                const change = (Math.random() - 0.5) * 2; // Cambio pequeño
+                risk.probability = Math.max(10, Math.min(100, risk.probability + change));
+                risk.impact = Math.max(10, Math.min(100, risk.impact + change * 0.5));
+            });
+            applyFilters();
+            updateTimestamp();
+        }, 30000);
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            createParticles();
+            renderHeatmap();
+            renderStats();
+            updateTimestamp();
+            
+            // Animación de entrada para las celdas del mapa de calor
+            setTimeout(() => {
+                const cells = document.querySelectorAll('.risk-cell');
+                cells.forEach((cell, index) => {
+                    setTimeout(() => {
+                        cell.style.transform = 'scale(1)';
+                        cell.style.opacity = '1';
+                    }, index * 100);
+                });
+            }, 500);
+        });
+
+        // Efectos de teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
